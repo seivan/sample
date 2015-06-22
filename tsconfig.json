@@ -1,0 +1,26 @@
+{
+    "version": "1.5.0-beta",
+    "compileOnSave": false,
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "declaration": false,
+        "noImplicitAny": true,
+        "removeComments": true,
+        "noLib": false,
+        "preserveConstEnums": true,
+        "suppressImplicitAnyIndexErrors": true
+    },
+    "filesGlob": [
+        "./**/*.ts",
+        "!./node_modules/**/*.ts"
+    ],
+    "files": [
+        "./application.ts",
+        "./components/Main.ts",
+        "./components/Product.ts",
+        "./components/ProductRow.ts",
+        "./typings/react/react.d.ts",
+        "./typings/tsd.d.ts"
+    ]
+}
