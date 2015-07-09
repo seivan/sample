@@ -15,7 +15,7 @@ module.exports = {
     },
 
     output: {
-        path: './build',
+        path: '../build',
         filename: './Main.js'
     }
 };
