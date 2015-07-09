@@ -122,9 +122,6 @@ class ProductTable extends React.Component<ProductInterface,any> {
        components = x
      }).dispose()
 
-     console.log(components)
-
-
     var d = React.DOM
     var table = d.table
     var head = d.thead
