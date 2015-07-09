@@ -1,7 +1,43 @@
 /// <reference path="../typings/tsd.d.ts"/>
 
-import Product = require("./Product");
+import Rx = require("rx")
+
+
+// import Lazy = require("lazy.js")
 import React = require("react")
+import Product = require("./Product");
+import ProductRow = require("./ProductRow");
+declare var EventSource : sse.IEventSourceStatic;
+
+declare module sse {
+
+    enum ReadyState {CONNECTING = 0, OPEN = 1, CLOSED = 2}
+
+    interface IEventSourceStatic extends EventTarget {
+        new (url: string, eventSourceInitDict?: IEventSourceInit): IEventSourceStatic;
+        url: string;
+        withCredentials: boolean;
+        CONNECTING: ReadyState; // constant, always 0
+        OPEN: ReadyState; // constant, always 1
+        CLOSED: ReadyState; // constant, always 2
+        readyState: ReadyState;
+        onopen: Function;
+        onmessage: (event: IOnMessageEvent) => void;
+        onerror: Function;
+        close: () => void;
+    }
+
+    interface IEventSourceInit {
+        withCredentials?: boolean;
+    }
+
+    interface IOnMessageEvent {
+        data: string;
+    }
+}
+
+
+
 
 var products = [
   new Product('Sporting Goods', '$49.99',  true, 'Football'),
@@ -12,24 +48,14 @@ var products = [
   new Product('Electronics',  '$199.99',  true,  'Nexus 7')
 ]
 
+var copy = JSON.stringify(products[0])
 
-class ProductRow extends React.Component<{product:Product, key:number},any> {
+for (let i = 0; i < 1000; i++) {
+    products.push(JSON.parse(copy))
+  }
 
-    render = () => {
+products = [new Product('Sporting Goods', '$49.99',  true, 'Football')]
 
-      var product = this.props.product
-
-      var name = product.stocked ?
-                product.name :
-                React.DOM.span({style: {color: 'red'}}, product.name)
-
-
-      return React.DOM.tr(null,
-              React.DOM.td(null, name),
-              React.DOM.td(null, product.price)
-      )
-    }
-}
 
 class ProductCategoryRow extends React.Component<{key:string},any> {
 
@@ -48,8 +74,9 @@ interface ProductInterface {
 
 class ProductTable extends React.Component<ProductInterface,any> {
 
+
   render = () => {
-    var components:Array<React.ReactElement<any>>
+    var components:any; //Array<React.ReactElement<any>>
 
     var products:Array<Product> = []
     for (var x in this.props.products) {
@@ -58,9 +85,19 @@ class ProductTable extends React.Component<ProductInterface,any> {
 
 
 
-    console.log(products)
+    // var lazyProducts = products//Lazy(products)
 
-    var components =  products
+    // var shit =  Rx.Observable.fromArray(lazyProducts)
+
+    var lazyProducts = Rx.Observable.fromArray(products)
+    var search = Rx.Observable.from(this.props.searchInterface)
+
+    var zoom = lazyProducts.reduce((first, second) => {
+           return first
+         }, 5)
+
+
+    lazyProducts
     .filter (product => {
       var filterMatch = product.name.toLowerCase().indexOf(this.props.searchInterface.filterText.toLowerCase()) >= 0
       return filterMatch
@@ -69,15 +106,23 @@ class ProductTable extends React.Component<ProductInterface,any> {
       var showOnlyStocked = this.props.searchInterface.inStockOnly == false || product.stocked
       return showOnlyStocked
     })
-    .reduce ((tuple, product, idx) =>{
+    .reduce ((tuple, product) =>{
       if (tuple.last.indexOf(product.category) < 0) {
         tuple.last.push(product.category)
         tuple.components.push( React.createElement(ProductCategoryRow, {key:product.category}) )
       }
-       tuple.components.push( React.createElement(ProductRow, {product:product, key:idx}) )
+       tuple.components.push( React.createElement(ProductRow, {product:product, key:products.indexOf(product)}) )
        return tuple
      }, {last:Array<String>(), components:Array<React.ReactElement<any>>()})
-     .components
+     .map ((x:any) => {
+
+        return x["components"]
+     })
+     .subscribe ((x:any) => {
+       components = x
+     }).dispose()
+
+
 
     var d = React.DOM
     var table = d.table
@@ -93,7 +138,7 @@ class ProductTable extends React.Component<ProductInterface,any> {
           d.th(null, "Price")
         )
       ),
-      tbody(null, components.map(component => { return component }))
+      tbody(null, components)
 
     )
 
@@ -114,6 +159,7 @@ class SearchBar extends React.Component<SearchInterface,any>{
 
   handleCheckbox = (e:React.SyntheticEvent) => {
     this.props.handleUserInput({inStockOnly:e.target["checked"]})
+
   }
 
   handleSearch = (e:React.SyntheticEvent) => {
@@ -164,44 +210,24 @@ class FilterableProductTable extends React.Component<Array<Product>,SearchInterf
 
 
 
-class Searching extends React.Component<any,{saut:boolean}>{
+ var source = new EventSource('http://localhost:3000/messages/')
 
-  constructor(props?: any, context?: any) {
-    super()
-    this.state = {saut:false}
+ source.onerror = () => {
+   console.log("FAILED")
+ };
 
-  }
+source.addEventListener("stream.create", (e) =>  {
+  console.log("create")
+  console.log(e)
 
-  handleCheckbox = (e:React.SyntheticEvent) =>  {
-    var previous = !this.state.saut
-    this.setState({saut: previous}); //works
-  }
+})
 
-  handleSearch = (e:React.SyntheticEvent) => {
+source.addEventListener("stream.update", (e) =>  {
+  console.log("update")
+  console.log(e)
+  // source.close()
 
-  }
-
-  render = () => {
-
-    return React.DOM.form(null,
-      React.DOM.input(
-        {type:"text",
-        placeholder : "Search...",
-        value:"this.props.filterText",
-        onChange : this.handleSearch
-        }),
-      React.DOM.p(null,
-        React.DOM.input(
-          {type: "checkbox",
-          checked: this.state.saut,
-          onChange : this.handleCheckbox
-          }),
-        ' ',
-        "Only show products in stock"
-      )
-    )
-  }
-}
+})
 
 function run() {
 

@@ -13,14 +13,18 @@
     },
     "filesGlob": [
         "./**/*.ts",
-        "!./node_modules/**/*.ts"
+        "!./node_modules/**/*.ts",
+        "!./node_modules/**/*.js"
     ],
     "files": [
         "./application.ts",
         "./components/Main.ts",
         "./components/Product.ts",
         "./components/ProductRow.ts",
+        "./typings/lazy.js/lazy.js.d.ts",
         "./typings/react/react.d.ts",
+        "./typings/rx/rx-lite.d.ts",
+        "./typings/rx/rx.d.ts",
         "./typings/tsd.d.ts"
     ]
 }

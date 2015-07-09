@@ -5,8 +5,11 @@
   "path": "typings",
   "bundle": "typings/tsd.d.ts",
   "installed": {
+    "lazy.js/lazy.js.d.ts": {
+      "commit": "101a5daef4fc42eca0d447ba5d080248f80daf90"
+    },
     "react/react.d.ts": {
-      "commit": "84dfeeac378552c22297a5d555b1999a396d7e7c"
+      "commit": "101a5daef4fc42eca0d447ba5d080248f80daf90"
     }
   }
 }

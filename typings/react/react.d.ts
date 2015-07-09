@@ -43,16 +43,10 @@ declare module "react" {
     }
 
     interface DOMFactory<P> extends ClassicFactory<P> {
-        (props: P, ...children: ReactNode[]): DOMElement<P>;
+        (props?: P, ...children: ReactNode[]): DOMElement<P>;
     }
-
-
 
     type HTMLFactory = DOMFactory<HTMLAttributes>;
-
-    interface Sag extends DOMAttributes {
-      cols:number
-    }
     type SVGFactory = DOMFactory<SVGAttributes>;
 
     //
@@ -81,12 +75,10 @@ declare module "react" {
         type: string,
         props?: P,
         ...children: ReactNode[]): DOMElement<P>;
-
     function createElement<P>(
         type: ClassicComponentClass<P> | string,
         props?: P,
         ...children: ReactNode[]): ClassicElement<P>;
-
     function createElement<P>(
         type: ComponentClass<P>,
         props?: P,
@@ -106,15 +98,9 @@ declare module "react" {
         ...children: ReactNode[]): ReactElement<P>;
 
     function render<P>(
-      element: DOMElement<P>,
-      container: Element,
-      callback?: () => any): DOMComponent<P>;
-
-    // function render<P, S>(
-    //     element: ComponentSpec<P,S>,
-    //     container: Element,
-    //     callback?: () => any): DOMComponent<P>;
-
+        element: DOMElement<P>,
+        container: Element,
+        callback?: () => any): DOMComponent<P>;
     function render<P, S>(
         element: ClassicElement<P>,
         container: Element,
@@ -142,7 +128,6 @@ declare module "react" {
     //
     // Component API
     // ----------------------------------------------------------------------
-
 
     // Base component for plain JS classes
     class Component<P, S> implements ComponentLifecycle<P, S> {
@@ -526,7 +511,7 @@ declare module "react" {
         // Non-standard Attributes
         autoCapitalize?: boolean;
         autoCorrect?: boolean;
-        // property?: string;
+        property?: string;
         itemProp?: string;
         itemScope?: boolean;
         itemType?: string;

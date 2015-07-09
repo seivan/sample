@@ -1,20 +1,24 @@
-//
-// /// <reference path="Product.ts" />
-//
-// import React = require("react")
-//
-// class ProductRow extends React.Component<Product,any>
-// implements React.ComponentSpec<Product,any> {
-//     render() {
-//
-//       var name = this.props.stocked ?
-//                 this.props.name :
-//                 React.DOM.span({style: {color: 'red'}}, this.props.name)
-//
-//
-//       return React.DOM.tr({key:this.props.name},
-//               React.DOM.td(null, name),
-//               React.DOM.td(null, this.props.price)
-//       )
-//     }
-// }
+/// <reference path="../typings/tsd.d.ts"/>
+import React = require("react")
+
+import Product = require("./Product");
+
+class ProductRow extends React.Component<{product:Product},any> {
+
+    render = () => {
+
+      var product = this.props.product
+
+      var name = product.stocked ?
+                product.name :
+                React.DOM.span({style: {color: 'red'}}, product.name)
+
+
+      return React.DOM.tr(null,
+              React.DOM.td(null, name),
+              React.DOM.td(null, product.price)
+      )
+    }
+}
+
+export = ProductRow
