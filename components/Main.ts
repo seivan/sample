@@ -54,7 +54,7 @@ for (let i = 0; i < 1000; i++) {
     products.push(JSON.parse(copy))
   }
 
-products = [new Product('Sporting Goods', '$49.99',  true, 'Football')]
+//products = [new Product('Sporting Goods', '$49.99',  true, 'Football')]
 
 
 class ProductCategoryRow extends React.Component<{key:string},any> {
@@ -122,6 +122,7 @@ class ProductTable extends React.Component<ProductInterface,any> {
        components = x
      }).dispose()
 
+     console.log(components)
 
 
     var d = React.DOM
