@@ -96,12 +96,7 @@
 	            for (var x in _this.props.products) {
 	                products.push(_this.props.products[x]);
 	            }
-	            var lazyProducts = Rx.Observable.fromArray(products);
-	            var search = Rx.Observable.from(_this.props.searchInterface);
-	            var zoom = lazyProducts.reduce(function (first, second) {
-	                return first;
-	            }, 5);
-	            lazyProducts
+	            Rx.Observable.fromArray(products)
 	                .filter(function (product) {
 	                var filterMatch = product.name.toLowerCase().indexOf(_this.props.searchInterface.filterText.toLowerCase()) >= 0;
 	                return filterMatch;
@@ -171,6 +166,7 @@
 	            return React.DOM.div(null, React.createElement(SearchBar, _this.state), React.createElement(ProductTable, { products: _this.props, searchInterface: _this.state }));
 	        };
 	        this.state = { filterText: '', inStockOnly: false, handleUserInput: this.handleUserInput };
+	        console.log(this.props);
 	    }
 	    return FilterableProductTable;
 	})(React.Component);

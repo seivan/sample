@@ -84,20 +84,7 @@ class ProductTable extends React.Component<ProductInterface,any> {
     }
 
 
-
-    // var lazyProducts = products//Lazy(products)
-
-    // var shit =  Rx.Observable.fromArray(lazyProducts)
-
-    var lazyProducts = Rx.Observable.fromArray(products)
-    var search = Rx.Observable.from(this.props.searchInterface)
-
-    var zoom = lazyProducts.reduce((first, second) => {
-           return first
-         }, 5)
-
-
-    lazyProducts
+    Rx.Observable.fromArray(products)
     .filter (product => {
       var filterMatch = product.name.toLowerCase().indexOf(this.props.searchInterface.filterText.toLowerCase()) >= 0
       return filterMatch
@@ -191,6 +178,7 @@ class FilterableProductTable extends React.Component<Array<Product>,SearchInterf
   constructor(props?: Array<Product>, context?: any) {
     super(props, context)
     this.state = {filterText:'', inStockOnly : false, handleUserInput : this.handleUserInput}
+    console.log(this.props)
   }
 
   handleUserInput = (searchInterface:SearchInterface) => {
